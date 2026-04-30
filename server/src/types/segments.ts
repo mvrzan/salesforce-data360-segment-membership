@@ -30,3 +30,23 @@ export interface SegmentsResponse {
   segments: Segment[];
   totalSize: number;
 }
+
+export interface SegmentMember {
+  deltaType: string;
+  id: string;
+  snapshotType: string;
+  timestamp: string;
+  versionStamp: string;
+}
+
+export interface SegmentMembersResponse {
+  data: SegmentMember[];
+  endTime: string;
+  filter: string;
+  limit: number;
+  offSet: number;
+  orderBy: string;
+  rowCount: number;
+  startTime: string;
+  totalCount: number;
+}

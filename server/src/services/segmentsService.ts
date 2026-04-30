@@ -1,7 +1,7 @@
 import { getRequiredEnvVars } from "../utils/env.ts";
 import { logger } from "../utils/loggingUtil.ts";
 import getSalesforceToken from "./salesforceAuth.ts";
-import type { SegmentsResponse } from "../types/segments.ts";
+import type { SegmentsResponse, SegmentMembersResponse } from "../types/segments.ts";
 
 const MODULE = "segmentsService";
 
@@ -30,4 +30,23 @@ const getSegments = async (): Promise<SegmentsResponse> => {
   return data;
 };
 
-export default getSegments;
+const getSegmentMembers = async (segmentApiName: string): Promise<SegmentMembersResponse> => {
+  const token = await getSalesforceToken();
+
+  const response = await fetch(
+    `${SF_INSTANCE_URL}/services/data/${API_VERSION}/ssot/segments/${encodeURIComponent(segmentApiName)}/members`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    logger.error(MODULE, `Failed to fetch members for segment "${segmentApiName}": ${response.status} - ${errorText}`);
+    throw new Error(`Failed to fetch segment members: ${response.statusText}`);
+  }
+
+  return (await response.json()) as SegmentMembersResponse;
+};
+
+export { getSegments, getSegmentMembers };
