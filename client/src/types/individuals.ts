@@ -1,5 +1,6 @@
 export interface Individual {
   id: string | null;
+  unifiedId: string | null;
   firstName: string | null;
   lastName: string | null;
   personName: string | null;
@@ -11,6 +12,7 @@ export interface Individual {
   dataSourceId: string | null;
   dataSourceObjectId: string | null;
   photoUrl: string | null;
+  relatedData: Record<string, Record<string, unknown>[]>;
 }
 
 export interface IndividualsResponse {

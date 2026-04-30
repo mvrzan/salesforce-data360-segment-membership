@@ -22,8 +22,8 @@ interface RelatedFilter {
   type: "NumberAggregation" | "DateAggregation";
   filter: DirectFilter;
   containerObjectApiName: string;
-  path: PathStep[][];
-  joinPath: PathStep[][];
+  path: PathStep[];
+  joinPath: PathStep[];
   aggregateFunction: string;
   comparison: DirectFilter;
   hierarchySelected: boolean;
@@ -34,7 +34,8 @@ interface RelatedFilter {
   outerComparison: DirectFilter | null;
 }
 
-type CriteriaFilter = DirectFilter | RelatedFilter;
+export type CriteriaFilter = DirectFilter | RelatedFilter;
+export type { RelatedFilter, DirectFilter };
 
 export interface IncludeCriteria {
   type: "LogicalComparison";

@@ -1,7 +1,7 @@
 import { getRequiredEnvVars } from "../utils/env.ts";
 import { logger } from "../utils/loggingUtil.ts";
 import getSalesforceToken from "./salesforceAuth.ts";
-import type { SegmentsResponse, SegmentMembersResponse } from "../types/segments.ts";
+import type { Segment, SegmentsResponse, SegmentMembersResponse } from "../types/segments.ts";
 
 const MODULE = "segmentsService";
 
@@ -49,4 +49,11 @@ const getSegmentMembers = async (segmentApiName: string): Promise<SegmentMembers
   return (await response.json()) as SegmentMembersResponse;
 };
 
-export { getSegments, getSegmentMembers };
+const getSegmentByApiName = async (segmentApiName: string): Promise<Segment> => {
+  const data = await getSegments();
+  const segment = data.segments.find((s) => s.apiName === segmentApiName);
+  if (!segment) throw new Error(`Segment "${segmentApiName}" not found`);
+  return segment;
+};
+
+export { getSegments, getSegmentMembers, getSegmentByApiName };
