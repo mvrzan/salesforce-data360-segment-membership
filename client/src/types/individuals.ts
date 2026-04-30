@@ -1,0 +1,19 @@
+export interface Individual {
+  id: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  personName: string | null;
+  salutation: string | null;
+  birthDate: string | null;
+  titleName: string | null;
+  primaryAccountId: string | null;
+  currentEmployerName: string | null;
+  dataSourceId: string | null;
+  dataSourceObjectId: string | null;
+  photoUrl: string | null;
+}
+
+export interface IndividualsResponse {
+  individuals: Individual[];
+  totalCount: number;
+}
