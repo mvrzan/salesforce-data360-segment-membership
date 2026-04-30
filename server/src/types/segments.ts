@@ -1,3 +1,47 @@
+interface CriteriaSubject {
+  objectApiName: string;
+  fieldApiName: string;
+}
+
+type PathStep = [CriteriaSubject, CriteriaSubject];
+
+interface DirectFilter {
+  type: "TextComparison" | "NumberComparison" | "DateComparison";
+  path: PathStep[] | null;
+  joinPath: PathStep[] | null;
+  subject: CriteriaSubject;
+  selfReference: boolean;
+  operator: string;
+  subjectFieldDataType: string;
+  subjectFieldBusinessType: string;
+  subjectFieldSourceType: "DIRECT" | "RELATED" | null;
+  value?: number | string;
+}
+
+interface RelatedFilter {
+  type: "NumberAggregation" | "DateAggregation";
+  filter: DirectFilter;
+  containerObjectApiName: string;
+  path: PathStep[][];
+  joinPath: PathStep[][];
+  aggregateFunction: string;
+  comparison: DirectFilter;
+  hierarchySelected: boolean;
+  hierarchicalPathList: unknown;
+  innerAggregationEnabled: boolean;
+  innerAggregationSubject: unknown;
+  outerAggregationFunction: string | null;
+  outerComparison: DirectFilter | null;
+}
+
+type CriteriaFilter = DirectFilter | RelatedFilter;
+
+export interface IncludeCriteria {
+  type: "LogicalComparison";
+  operator: "and" | "or";
+  filters: CriteriaFilter[];
+}
+
 export interface Segment {
   apiName: string;
   createdBy: { id: string };
@@ -5,7 +49,7 @@ export interface Segment {
   dataSpace: string;
   description: string;
   displayName: string;
-  includeCriteria: unknown;
+  includeCriteria: IncludeCriteria;
   lastModifiedBy: { id: string };
   lastModifiedDate: string;
   lastPublishedEndDateTime: string;
