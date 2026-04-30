@@ -6,7 +6,12 @@ import type { Individual, IndividualsResponse, QueryApiResponse } from "../types
 
 const MODULE = "individualsService";
 
-const { SF_INSTANCE_URL, API_VERSION } = getRequiredEnvVars("SF_INSTANCE_URL", "API_VERSION");
+const { SF_INSTANCE_URL, API_VERSION, UNIFIED_INDIVIDUAL_DMO, UNIFIED_LINK_INDIVIDUAL_DMO } = getRequiredEnvVars(
+  "SF_INSTANCE_URL",
+  "API_VERSION",
+  "UNIFIED_INDIVIDUAL_DMO",
+  "UNIFIED_LINK_INDIVIDUAL_DMO",
+);
 
 const getIndividualsForSegment = async (segmentApiName: string): Promise<IndividualsResponse> => {
   const [token, membersResponse] = await Promise.all([getSalesforceToken(), getSegmentMembers(segmentApiName)]);
@@ -17,7 +22,7 @@ const getIndividualsForSegment = async (segmentApiName: string): Promise<Individ
 
   const unifiedIds = membersResponse.data.map((m) => `'${m.id}'`).join(", ");
 
-  const sql = `SELECT DISTINCT i.* FROM UnifiedssotIndividualInd__dlm u JOIN UnifiedLinkssotIndividualInd__dlm l ON u.ssot__Id__c = l.UnifiedRecordId__c JOIN ssot__Individual__dlm i ON l.SourceRecordId__c = i.ssot__Id__c WHERE u.ssot__Id__c IN (${unifiedIds})`;
+  const sql = `SELECT DISTINCT i.* FROM ${UNIFIED_INDIVIDUAL_DMO} u JOIN ${UNIFIED_LINK_INDIVIDUAL_DMO} l ON u.ssot__Id__c = l.UnifiedRecordId__c JOIN ssot__Individual__dlm i ON l.SourceRecordId__c = i.ssot__Id__c WHERE u.ssot__Id__c IN (${unifiedIds})`;
 
   logger.debug(MODULE, `Executing SQL: ${sql}`);
 
