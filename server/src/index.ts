@@ -3,6 +3,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { logger } from "./utils/loggingUtil.ts";
+import segmentsRouter from "./routes/segments.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -12,6 +13,8 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN ?? "*";
 
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
+
+app.use(segmentsRouter);
 
 // SPA hosting
 app.use(express.static(path.join(__dirname, "../public")));
