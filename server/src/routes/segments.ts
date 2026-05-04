@@ -11,6 +11,7 @@ const router = Router();
 router.get("/api/v1/segments", async (_req: Request, res: Response) => {
   try {
     const segments = await getSegments();
+
     res.json(segments);
   } catch (error) {
     logger.error(MODULE, `Error fetching segments: ${error}`);
