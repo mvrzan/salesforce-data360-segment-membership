@@ -81,3 +81,4 @@ server/build/
 # Agent files
 AGENTS.md
 .github/
+.claude/
