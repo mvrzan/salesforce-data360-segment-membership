@@ -1,4 +1,4 @@
-import { getRequiredEnvVars } from "../utils/env.ts";
+import { getRequiredEnvVars } from "../types/env.ts";
 import { logger } from "../utils/loggingUtil.ts";
 import getSalesforceToken from "./salesforceAuth.ts";
 import { getSegmentMembers, getSegmentByApiName } from "./segmentsService.ts";
