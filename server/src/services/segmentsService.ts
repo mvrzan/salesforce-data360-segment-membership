@@ -23,7 +23,9 @@ const getSegments = async (): Promise<SegmentsResponse> => {
   const data = (await response.json()) as SegmentsResponse;
 
   data.segments = data.segments.map((segment) => {
-    const decoded = (segment.includeCriteria as string).replace(/&quot;/g, '"');
+    const raw = segment.includeCriteria as unknown;
+    if (typeof raw !== "string") return segment;
+    const decoded = raw.replace(/&quot;/g, '"');
     return { ...segment, includeCriteria: JSON.parse(decoded) };
   });
 
@@ -33,8 +35,13 @@ const getSegments = async (): Promise<SegmentsResponse> => {
 const getSegmentMembers = async (segmentApiName: string): Promise<SegmentMembersResponse> => {
   const token = await getSalesforceToken();
 
+  const params = new URLSearchParams({
+    startTime: "1970-01-01T00:00:00Z",
+    endTime: new Date().toISOString(),
+  });
+
   const response = await fetch(
-    `${SF_INSTANCE_URL}/services/data/${API_VERSION}/ssot/segments/${encodeURIComponent(segmentApiName)}/members`,
+    `${SF_INSTANCE_URL}/services/data/${API_VERSION}/ssot/segments/${encodeURIComponent(segmentApiName)}/members?${params}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     },
