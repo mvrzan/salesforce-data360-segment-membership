@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Loader2, AlertCircle, ArrowLeft, Users, Search } from "lucide-react";
+import { Loader2, AlertCircle, ArrowLeft, Users, Search, RefreshCw } from "lucide-react";
 import type { Individual } from "../types/individuals";
 import { fetchIndividuals } from "../services/apiService";
 import IndividualCard from "../components/IndividualCard";
@@ -12,25 +12,32 @@ const IndividualsPage = () => {
   const [individuals, setIndividuals] = useState<Individual[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    if (!segmentApiName) return;
-
-    const load = async () => {
+  const load = useCallback(
+    async (force: boolean) => {
+      if (!segmentApiName) return;
       try {
-        const data = await fetchIndividuals(segmentApiName);
+        if (force) setRefreshing(true);
+        const data = await fetchIndividuals(segmentApiName, force);
         setIndividuals(data.individuals);
         setTotalCount(data.totalCount);
+        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
         setLoading(false);
+        setRefreshing(false);
       }
-    };
-    load();
-  }, [segmentApiName]);
+    },
+    [segmentApiName],
+  );
+
+  useEffect(() => {
+    load(false);
+  }, [load]);
 
   const filtered = useMemo(
     () =>
@@ -96,14 +103,24 @@ const IndividualsPage = () => {
             <ArrowLeft size={14} /> Back to segments
           </button>
 
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <Users size={24} className="text-blue-500" />
-              <h1 className="text-3xl font-bold text-white">{segmentApiName}</h1>
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <Users size={24} className="text-blue-500 shrink-0" />
+                <h1 className="text-3xl font-bold text-white truncate">{segmentApiName}</h1>
+              </div>
+              <p className="text-slate-400 mt-1">
+                {totalCount} individual{totalCount !== 1 ? "s" : ""} in this segment
+              </p>
             </div>
-            <p className="text-slate-400 mt-1">
-              {totalCount} individual{totalCount !== 1 ? "s" : ""} in this segment
-            </p>
+            <button
+              onClick={() => load(true)}
+              disabled={refreshing}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60 shrink-0"
+            >
+              <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+              <span>{refreshing ? "Refreshing…" : "Refresh"}</span>
+            </button>
           </div>
 
           <div className="relative mb-6">
@@ -126,7 +143,11 @@ const IndividualsPage = () => {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((individual, i) => (
-                <IndividualCard key={individual.id ?? i} individual={individual} />
+                <IndividualCard
+                  key={individual.id ?? i}
+                  individual={individual}
+                  segmentApiName={segmentApiName ?? ""}
+                />
               ))}
             </div>
           )}

@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { Loader2, AlertCircle, Search, Layers } from "lucide-react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Loader2, AlertCircle, Search, Layers, RefreshCw } from "lucide-react";
 import type { Segment } from "../types/segments";
 import { fetchSegments } from "../services/apiService";
 import SegmentCard from "../components/SegmentCard";
@@ -7,22 +7,27 @@ import SegmentCard from "../components/SegmentCard";
 const SegmentsPage = () => {
   const [segments, setSegments] = useState<Segment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await fetchSegments();
-        setSegments(data.segments);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const load = useCallback(async (force: boolean) => {
+    try {
+      if (force) setRefreshing(true);
+      const data = await fetchSegments(force);
+      setSegments(data.segments);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   }, []);
+
+  useEffect(() => {
+    load(false);
+  }, [load]);
 
   const filtered = useMemo(
     () =>
@@ -70,14 +75,24 @@ const SegmentsPage = () => {
     <>
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-6 py-10">
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <Layers size={24} className="text-blue-500" />
-              <h1 className="text-3xl font-bold text-white">Segments</h1>
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <Layers size={24} className="text-blue-500" />
+                <h1 className="text-3xl font-bold text-white">Segments</h1>
+              </div>
+              <p className="text-slate-400 mt-1">
+                {segments.length} segment{segments.length !== 1 ? "s" : ""} in Data Cloud
+              </p>
             </div>
-            <p className="text-slate-400 mt-1">
-              {segments.length} segment{segments.length !== 1 ? "s" : ""} in Data Cloud
-            </p>
+            <button
+              onClick={() => load(true)}
+              disabled={refreshing}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60"
+            >
+              <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+              <span>{refreshing ? "Refreshing…" : "Refresh"}</span>
+            </button>
           </div>
 
           <div className="relative mb-6">
