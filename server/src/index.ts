@@ -3,14 +3,13 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { logger } from "./utils/loggingUtil.ts";
-import { getRequiredEnvVars } from "./types/env.ts";
 import { requestLoggerMiddleware } from "./middleware/requestLoggerMiddleware.ts";
 import healthRouter from "./routes/healthRoutes.ts";
 import segmentsRouter from "./routes/segments.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const { CORS_ORIGIN } = getRequiredEnvVars("CORS_ORIGIN");
+const CORS_ORIGIN = process.env.CORS_ORIGIN ?? "*";
 const PORT = process.env.PORT ?? 3000;
 
 const app = express();
