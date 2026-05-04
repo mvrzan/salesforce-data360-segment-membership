@@ -1,33 +1,11 @@
 import { Router } from "express";
-import type { Request, Response } from "express";
-import { logger } from "../utils/loggingUtil.ts";
-import { getSegments } from "../services/segmentsService.ts";
-import { getIndividualsForSegment } from "../services/individualsService.ts";
-
-const MODULE = "segmentsRoute";
+import { apiKeyMiddleware } from "../middleware/apiKeyMiddleware.ts";
+import { getSegmentsController } from "../controllers/segmentsController.ts";
+import { getIndividualsForSegmentController } from "../controllers/individualsController.ts";
 
 const router = Router();
 
-router.get("/api/v1/segments", async (_req: Request, res: Response) => {
-  try {
-    const segments = await getSegments();
-
-    res.json(segments);
-  } catch (error) {
-    logger.error(MODULE, `Error fetching segments: ${error}`);
-    res.status(500).json({ error: "Failed to fetch segments" });
-  }
-});
-
-router.get("/api/v1/segments/:segmentApiName/individuals", async (req: Request, res: Response) => {
-  try {
-    const segmentApiName = req.params.segmentApiName as string;
-    const individuals = await getIndividualsForSegment(segmentApiName);
-    res.json(individuals);
-  } catch (error) {
-    logger.error(MODULE, `Error fetching individuals for segment: ${error}`);
-    res.status(500).json({ error: "Failed to fetch segment individuals" });
-  }
-});
+router.get("/api/v1/segments", apiKeyMiddleware, getSegmentsController);
+router.get("/api/v1/segments/:segmentApiName/individuals", apiKeyMiddleware, getIndividualsForSegmentController);
 
 export default router;
