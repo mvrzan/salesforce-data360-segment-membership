@@ -29,7 +29,7 @@ const SegmentCard = ({ segment }: SegmentCardProps) => {
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
             <span className="flex items-center gap-1.5">
               <Users size={14} />
-              <span>{segment.lastSegmentMemberCount.toLocaleString()} members</span>
+              <span>{(segment.lastSegmentMemberCount ?? 0).toLocaleString()} members</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Calendar size={14} />
