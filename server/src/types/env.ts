@@ -1,4 +1,4 @@
-import { logger } from "./loggingUtil.ts";
+import { logger } from "../utils/loggingUtil.ts";
 
 export const getRequiredEnvVars = <T extends readonly string[]>(...keys: T): { readonly [K in T[number]]: string } => {
   const missing = keys.filter((key) => !process.env[key]);
