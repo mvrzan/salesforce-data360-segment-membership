@@ -35,6 +35,7 @@ const runQuery = async (token: string, sql: string): Promise<QueryApiResponse> =
 };
 
 const toRowMap = (result: QueryApiResponse): Record<string, unknown>[] => {
+  if (!result.metadata || !result.data) return [];
   const fieldNames = result.metadata.map((f) => f.name);
   return result.data.map((values) => Object.fromEntries(fieldNames.map((name, i) => [name, values[i] ?? null])));
 };
@@ -70,6 +71,8 @@ const getIndividualsForSegment = async (segmentApiName: string): Promise<Individ
     return { individuals: [], totalCount: 0 };
   }
 
+  // console.log("membersResponse", membersResponse);
+
   const unifiedIds = membersResponse.data.map((m) => m.id);
   const unifiedIdsInClause = unifiedIds.map((id) => `'${id}'`).join(", ");
 
@@ -94,10 +97,9 @@ const getIndividualsForSegment = async (segmentApiName: string): Promise<Individ
   }
 
   // Extract related DMOs from segment criteria
+  const criteriaFilters = (segment.includeCriteria?.filters ?? []) as RelatedFilter[];
   const relatedFilters = extractRelatedFilters(
-    (segment.includeCriteria.filters as RelatedFilter[]).filter(
-      (f): f is RelatedFilter => f.type === "NumberAggregation" || f.type === "DateAggregation",
-    ),
+    criteriaFilters.filter((f) => f.type === "NumberAggregation" || f.type === "DateAggregation"),
   );
 
   // Query each related DMO in parallel
