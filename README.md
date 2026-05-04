@@ -19,7 +19,8 @@ A full-stack explorer for Salesforce Data 360 (formerly Data Cloud) segments, th
   - [Demo](#demo)
     - [Architecture Diagram](#architecture-diagram)
     - [Segment Browsing](#segment-browsing)
-    - [Individual Detail \& Related Data Explorer](#individual-detail--related-data-explorer)
+    - [Segment Members](#segment-members)
+    - [Segment Member Individual Details](#segment-member-individual-details)
   - [API Specification](#api-specification)
     - [Authentication](#authentication)
     - [Middleware](#middleware)
@@ -91,11 +92,15 @@ The demo showcases two operational modes:
 
 ### Segment Browsing
 
-![Segment browsing demo](./screenshots/segments-demo.gif)
+![Segment browsing demo](./screenshots/segments.png)
 
-### Individual Detail & Related Data Explorer
+### Segment Members
 
-![Individual detail](./screenshots/individual-detail.png)
+![Segment members](./screenshots/segment-members.png)
+
+### Segment Member Individual Details
+
+![Segment member individual details](./screenshots/member-details.png)
 
 > **Note:** All the information in here is from a demo org and all the individuals are fictional.
 
