@@ -109,22 +109,22 @@ const IndividualDetail = ({ individual, onBack }: IndividualDetailProps) => {
 
   return (
     <main className="flex-1">
-      <div className="max-w-400 mx-auto px-6 py-10">
+      <div className="max-w-400 mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm mb-8"
+          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm mb-6 sm:mb-8"
         >
           <ArrowLeft size={14} /> Back to segment members
         </button>
 
-        <section className="relative overflow-hidden bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 mb-6">
+        <section className="relative overflow-hidden bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 sm:p-6 mb-6">
           <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-blue-500/10 blur-3xl" />
-          <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-            <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-blue-500/30 to-cyan-500/30 border border-blue-500/40 text-blue-300 font-bold text-2xl shrink-0">
+          <div className="relative flex flex-col md:flex-row md:items-center gap-4 sm:gap-6">
+            <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-linear-to-br from-blue-500/30 to-cyan-500/30 border border-blue-500/40 text-blue-300 font-bold text-xl sm:text-2xl shrink-0">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold text-white truncate">{displayName}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white wrap-break-word">{displayName}</h1>
               {individual.salutation && (
                 <p className="text-slate-400 text-sm mt-1">{individual.salutation}</p>
               )}
@@ -147,7 +147,7 @@ const IndividualDetail = ({ individual, onBack }: IndividualDetailProps) => {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <StatCard
             icon={<Hash size={16} />}
             label="Unified ID"

@@ -84,7 +84,7 @@ const IndividualCard = ({ individual, segmentApiName }: IndividualCardProps) => 
 
       {individual.dataSourceId && (
         <div className="mt-3 pt-3 border-t border-slate-700/50">
-          <span className="text-xs text-slate-600 font-mono">{individual.dataSourceId}</span>
+          <span className="text-xs text-slate-600 font-mono wrap-break-word">{individual.dataSourceId}</span>
         </div>
       )}
     </button>

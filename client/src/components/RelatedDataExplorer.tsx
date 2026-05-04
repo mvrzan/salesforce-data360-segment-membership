@@ -172,13 +172,13 @@ const DataSetTable = ({ dmo, rows }: DataSetTableProps) => {
 
   return (
     <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-700/50 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="px-4 py-3 border-b border-slate-700/50 flex flex-col gap-3">
         <div className="min-w-0">
-          <h2 className="text-white font-semibold text-base truncate">{dmoLabel(dmo)}</h2>
-          <p className="text-xs text-slate-500 mt-0.5 font-mono truncate">{dmo}</p>
+          <h2 className="text-white font-semibold text-base wrap-break-word">{dmoLabel(dmo)}</h2>
+          <p className="text-xs text-slate-500 mt-0.5 font-mono wrap-break-word">{dmo}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative flex-1 md:w-72">
+          <div className="relative flex-1">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               id={`search-${dmo}`}
@@ -208,14 +208,18 @@ const DataSetTable = ({ dmo, rows }: DataSetTableProps) => {
                 {visibleColumns.length}/{allKeys.length}
               </span>
             </button>
+
             {columnPickerOpen && (
               <>
+                {/* Backdrop — both mobile and desktop */}
                 <div
-                  className="fixed inset-0 z-10"
+                  className="fixed inset-0 z-10 bg-black/40 sm:bg-transparent"
                   onClick={() => setColumnPickerOpen(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute right-0 top-full mt-2 z-20 w-64 max-h-80 overflow-y-auto bg-slate-900 border border-slate-700/60 rounded-lg shadow-xl p-1.5">
+
+                {/* Desktop dropdown */}
+                <div className="hidden sm:block absolute right-0 top-full mt-2 z-20 w-64 max-h-72 overflow-y-auto bg-slate-900 border border-slate-700/60 rounded-lg shadow-xl p-1.5">
                   <div className="flex items-center justify-between px-2 py-1.5">
                     <button
                       onClick={() => setHiddenColumns(new Set())}
@@ -236,7 +240,7 @@ const DataSetTable = ({ dmo, rows }: DataSetTableProps) => {
                       className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-800 cursor-pointer"
                     >
                       <input
-                        id={`col-${dmo}-${key}`}
+                        id={`col-desktop-${dmo}-${key}`}
                         type="checkbox"
                         checked={!hiddenColumns.has(key)}
                         onChange={() => toggleColumn(key)}
@@ -245,6 +249,51 @@ const DataSetTable = ({ dmo, rows }: DataSetTableProps) => {
                       <span className="text-xs text-slate-300 truncate">{prettifyKey(key)}</span>
                     </label>
                   ))}
+                </div>
+
+                {/* Mobile bottom sheet */}
+                <div className="sm:hidden fixed inset-x-0 bottom-0 z-20 bg-slate-900 border-t border-slate-700/60 rounded-t-2xl shadow-2xl">
+                  <div className="flex items-center justify-between px-4 py-4 border-b border-slate-700/50">
+                    <span className="text-white font-semibold text-base">Columns</span>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => setHiddenColumns(new Set())}
+                        className="text-sm text-blue-400 hover:text-blue-300"
+                      >
+                        Show all
+                      </button>
+                      <button
+                        onClick={() => setHiddenColumns(new Set(allKeys))}
+                        className="text-sm text-slate-500 hover:text-slate-300"
+                      >
+                        Hide all
+                      </button>
+                      <button
+                        onClick={() => setColumnPickerOpen(false)}
+                        className="text-slate-400 hover:text-white p-1"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="overflow-y-auto max-h-64 px-2 py-2">
+                    {allKeys.map((key) => (
+                      <label
+                        key={key}
+                        className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-slate-800 cursor-pointer"
+                      >
+                        <input
+                          id={`col-mobile-${dmo}-${key}`}
+                          type="checkbox"
+                          checked={!hiddenColumns.has(key)}
+                          onChange={() => toggleColumn(key)}
+                          className="accent-blue-500 w-4 h-4 shrink-0"
+                        />
+                        <span className="text-sm text-slate-200">{prettifyKey(key)}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <div className="h-safe-area-inset-bottom pb-6" />
                 </div>
               </>
             )}
@@ -257,19 +306,19 @@ const DataSetTable = ({ dmo, rows }: DataSetTableProps) => {
         {search && ` matching "${search}"`}
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-px">
         {sortedRows.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-10 px-4 text-slate-500">
             <Search size={28} className="mx-auto mb-3 opacity-40" />
             <p className="text-sm">No records match your search.</p>
           </div>
         ) : visibleColumns.length === 0 ? (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-10 px-4 text-slate-500">
             <Columns3 size={28} className="mx-auto mb-3 opacity-40" />
             <p className="text-sm">All columns are hidden. Use the Columns menu to show some.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <table className="min-w-max w-full text-sm">
             <thead className="bg-slate-900/40">
               <tr className="border-b border-slate-700/50">
                 {visibleColumns.map((key) => (

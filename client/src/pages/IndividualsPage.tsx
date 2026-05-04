@@ -95,28 +95,28 @@ const IndividualsPage = () => {
   return (
     <>
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm mb-8"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm mb-6 sm:mb-8"
           >
             <ArrowLeft size={14} /> Back to segments
           </button>
 
-          <div className="mb-8 flex items-start justify-between gap-4">
+          <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
             <div className="min-w-0">
               <div className="flex items-center gap-3 mb-2">
                 <Users size={24} className="text-blue-500 shrink-0" />
-                <h1 className="text-3xl font-bold text-white truncate">{segmentApiName}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white truncate">{segmentApiName}</h1>
               </div>
-              <p className="text-slate-400 mt-1">
+              <p className="text-slate-400 mt-1 text-sm sm:text-base">
                 {totalCount} individual{totalCount !== 1 ? "s" : ""} in this segment
               </p>
             </div>
             <button
               onClick={() => load(true)}
               disabled={refreshing}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60 shrink-0"
+              className="self-start flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60 shrink-0"
             >
               <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
               <span>{refreshing ? "Refreshing…" : "Refresh"}</span>
