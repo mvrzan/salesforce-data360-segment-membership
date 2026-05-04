@@ -82,7 +82,7 @@ const SegmentsPage = () => {
                 <h1 className="text-3xl font-bold text-white">Segments</h1>
               </div>
               <p className="text-slate-400 mt-1">
-                {segments.length} segment{segments.length !== 1 ? "s" : ""} in Data Cloud
+                {segments.length} segment{segments.length !== 1 ? "s" : ""} in Data 360
               </p>
             </div>
             <button

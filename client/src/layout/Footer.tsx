@@ -33,7 +33,7 @@ const Footer = () => (
               className="flex flex-col items-center gap-1.5 hover:opacity-80 transition-opacity"
             >
               <img src={data360Logo} alt="Data Cloud" className="h-7" />
-              <span className="text-slate-500 text-xs">Data Cloud</span>
+              <span className="text-slate-500 text-xs">Data 360</span>
             </a>
 
             <div className="w-px h-10 bg-slate-700/60" />
@@ -54,7 +54,7 @@ const Footer = () => (
 
     <div className="border-t border-slate-700/50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <span className="text-slate-500 text-sm">© {new Date().getFullYear()} Data360 Segments</span>
+        <span className="text-slate-500 text-sm">© {new Date().getFullYear()} Data 360 Segments</span>
         <a
           href="https://github.com/mvrzan"
           target="_blank"

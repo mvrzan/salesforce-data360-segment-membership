@@ -16,13 +16,13 @@ const Header = () => (
         </div>
         <div className="flex flex-col leading-tight">
           <span className="text-white font-semibold text-[15px] tracking-tight">Data 360 Segments</span>
-          <span className="text-[11px] text-slate-500 tracking-wide">Salesforce Data Cloud explorer</span>
+          <span className="text-[11px] text-slate-500 tracking-wide">Salesforce Data 360 explorer</span>
         </div>
       </Link>
 
       <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700/50 bg-slate-800/40 text-xs text-slate-400">
         <Sparkles size={12} className="text-blue-400" />
-        <span>Live from Data Cloud</span>
+        <span>Live from Data 360</span>
       </div>
     </div>
   </header>
