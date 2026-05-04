@@ -17,8 +17,6 @@ const { SF_INSTANCE_URL, API_VERSION, UNIFIED_INDIVIDUAL_DMO, UNIFIED_LINK_INDIV
 const SOURCE_INDIVIDUAL_DMO = "ssot__Individual__dlm";
 
 const runQuery = async (token: string, sql: string): Promise<QueryApiResponse> => {
-  logger.debug(MODULE, `Executing SQL: ${sql}`);
-
   const response = await fetch(`${SF_INSTANCE_URL}/services/data/${API_VERSION}/ssot/query-sql`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -70,8 +68,6 @@ const getIndividualsForSegment = async (segmentApiName: string): Promise<Individ
   if (membersResponse.data.length === 0) {
     return { individuals: [], totalCount: 0 };
   }
-
-  // console.log("membersResponse", membersResponse);
 
   const unifiedIds = membersResponse.data.map((m) => m.id);
   const unifiedIdsInClause = unifiedIds.map((id) => `'${id}'`).join(", ");
@@ -145,7 +141,6 @@ const getIndividualsForSegment = async (segmentApiName: string): Promise<Individ
       relatedByUnifiedId.set(uniId, existing);
     }
   }
-  console.log("relatedData", relatedByUnifiedId);
 
   const individuals: Individual[] = baseRows.map((row) => {
     const uniId = row["__unified_id__"] as string;
