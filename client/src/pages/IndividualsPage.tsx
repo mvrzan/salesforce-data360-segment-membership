@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Loader2, AlertCircle, ArrowLeft, Users, Search, RefreshCw } from "lucide-react";
+import { Loader2, AlertCircle, ArrowLeft, Users, Search, RefreshCw, Download } from "lucide-react";
 import type { Individual } from "../types/individuals";
 import { fetchIndividuals } from "../services/apiService";
+import { exportIndividualsToZip } from "../utils/exportUtils";
 import IndividualCard from "../components/IndividualCard";
 
 const IndividualsPage = () => {
@@ -13,6 +14,7 @@ const IndividualsPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
@@ -113,14 +115,29 @@ const IndividualsPage = () => {
                 {totalCount} individual{totalCount !== 1 ? "s" : ""} in this segment
               </p>
             </div>
-            <button
-              onClick={() => load(true)}
-              disabled={refreshing}
-              className="self-start flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60 shrink-0"
-            >
-              <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
-              <span>{refreshing ? "Refreshing…" : "Refresh"}</span>
-            </button>
+            <div className="self-start flex items-center gap-2 shrink-0">
+              <button
+                onClick={async () => {
+                  setExporting(true);
+                  await exportIndividualsToZip(filtered, segmentApiName ?? "segment");
+                  setExporting(false);
+                }}
+                disabled={filtered.length === 0 || exporting}
+                title="Export visible members as ZIP (one CSV per data set)"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+                <span className="hidden sm:inline">{exporting ? "Exporting…" : "Export ZIP"}</span>
+              </button>
+              <button
+                onClick={() => load(true)}
+                disabled={refreshing}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300 hover:text-white hover:border-slate-600 transition-colors disabled:opacity-60"
+              >
+                <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+                <span className="hidden sm:inline">{refreshing ? "Refreshing…" : "Refresh"}</span>
+              </button>
+            </div>
           </div>
 
           <div className="relative mb-6">
